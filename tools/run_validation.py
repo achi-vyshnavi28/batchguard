@@ -49,7 +49,7 @@ def installation_qualification() -> list[dict]:
         except md.PackageNotFoundError:
             installed = "not installed"
         check(f"IQ-02.{base}", f"Package {base} installed at pinned version", version, installed, installed == version)
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
         from sqlalchemy import inspect
 
         from batchguard.models import make_session_factory
@@ -65,7 +65,7 @@ def installation_qualification() -> list[dict]:
             check("IQ-04", "Master batch record and demo users load", "5 steps, 4 users",
                   f"{len(data['template'].steps)} steps, {len(data['users'])} users",
                   len(data["template"].steps) == 5 and len(data["users"]) == 4)
-            factory.kw["bind"].dispose()
+        factory.kw["bind"].dispose()  # release the SQLite file (Windows locks open files)
     templates = {p.name for p in (ROOT / "batchguard" / "templates").glob("*.html")}
     need = {"base.html", "login.html", "home.html", "batch.html", "alcoa.html", "audit.html"}
     check("IQ-05", "UI templates present", ", ".join(sorted(need)), ", ".join(sorted(templates)), need <= templates)

@@ -1,0 +1,230 @@
+{
+  "iq": [
+    {
+      "id": "IQ-01",
+      "description": "Python runtime version",
+      "expected": "3.12.x",
+      "actual": "3.12.8",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.fastapi",
+      "description": "Package fastapi installed at pinned version",
+      "expected": "0.141.1",
+      "actual": "0.141.1",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.httpx",
+      "description": "Package httpx installed at pinned version",
+      "expected": "0.28.1",
+      "actual": "0.28.1",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.itsdangerous",
+      "description": "Package itsdangerous installed at pinned version",
+      "expected": "2.2.0",
+      "actual": "2.2.0",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.Jinja2",
+      "description": "Package Jinja2 installed at pinned version",
+      "expected": "3.1.6",
+      "actual": "3.1.6",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.pytest",
+      "description": "Package pytest installed at pinned version",
+      "expected": "9.1.1",
+      "actual": "9.1.1",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.python-multipart",
+      "description": "Package python-multipart installed at pinned version",
+      "expected": "0.0.32",
+      "actual": "0.0.32",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.PyYAML",
+      "description": "Package PyYAML installed at pinned version",
+      "expected": "6.0.3",
+      "actual": "6.0.3",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.SQLAlchemy",
+      "description": "Package SQLAlchemy installed at pinned version",
+      "expected": "2.0.54",
+      "actual": "2.0.54",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-02.uvicorn",
+      "description": "Package uvicorn installed at pinned version",
+      "expected": "0.53.0",
+      "actual": "0.53.0",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-03",
+      "description": "Database schema created",
+      "expected": "audit_trail, batches, deviations, signatures, step_entries, template_steps, templates, users",
+      "actual": "audit_trail, batches, deviations, signatures, step_entries, template_steps, templates, users",
+      "result": "pass",
+      "at": "2026-09-24T13:15:50+00:00"
+    },
+    {
+      "id": "IQ-04",
+      "description": "Master batch record and demo users load",
+      "expected": "5 steps, 4 users",
+      "actual": "5 steps, 4 users",
+      "result": "pass",
+      "at": "2026-09-24T13:15:51+00:00"
+    },
+    {
+      "id": "IQ-05",
+      "description": "UI templates present",
+      "expected": "alcoa.html, audit.html, base.html, batch.html, home.html, login.html",
+      "actual": "alcoa.html, audit.html, base.html, batch.html, home.html, login.html",
+      "result": "pass",
+      "at": "2026-09-24T13:15:51+00:00"
+    }
+  ],
+  "tests": [
+    {
+      "test": "tests/test_oq.py::test_frs01_login_locks_after_three_failures",
+      "frs": "FRS-01",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.59
+    },
+    {
+      "test": "tests/test_oq.py::test_frs02_roles_are_enforced",
+      "frs": "FRS-02",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.155
+    },
+    {
+      "test": "tests/test_oq.py::test_frs03_entries_are_attributable_and_contemporaneous",
+      "frs": "FRS-03",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.006
+    },
+    {
+      "test": "tests/test_oq.py::test_frs04_out_of_spec_value_raises_deviation",
+      "frs": "FRS-04",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.009
+    },
+    {
+      "test": "tests/test_oq.py::test_frs05_corrections_keep_the_original_and_need_a_reason",
+      "frs": "FRS-05",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.006
+    },
+    {
+      "test": "tests/test_oq.py::test_frs06_signature_requires_password_and_records_name_time_meaning",
+      "frs": "FRS-06",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.304
+    },
+    {
+      "test": "tests/test_oq.py::test_frs07_two_person_rule",
+      "frs": "FRS-07",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.184
+    },
+    {
+      "test": "tests/test_oq.py::test_frs08_release_blocked_until_complete_verified_and_deviations_closed",
+      "frs": "FRS-08",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 1.118
+    },
+    {
+      "test": "tests/test_oq.py::test_frs09_audit_trail_detects_tampering",
+      "frs": "FRS-09",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.015
+    },
+    {
+      "test": "tests/test_oq.py::test_frs10_released_batch_is_locked",
+      "frs": "FRS-10",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.787
+    },
+    {
+      "test": "tests/test_oq.py::test_frs11_alcoa_report",
+      "frs": "FRS-11",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.023
+    },
+    {
+      "test": "tests/test_oq.py::test_frs12_deviation_closure_needs_qa_signature_and_summary",
+      "frs": "FRS-12",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.339
+    },
+    {
+      "test": "tests/test_web.py::test_pq_full_batch_lifecycle",
+      "frs": "FRS-08",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 2.829
+    },
+    {
+      "test": "tests/test_web.py::test_ui_blocks_actions_outside_role",
+      "frs": "FRS-02",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 1.056
+    },
+    {
+      "test": "tests/test_web.py::test_unauthenticated_users_are_redirected",
+      "frs": "FRS-01",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 0.664
+    }
+  ]
+}
