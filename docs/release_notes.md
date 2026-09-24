@@ -13,7 +13,7 @@
 Accounts lock after 3 failed logins. Sessions end after 15 minutes idle.
 
 ## Validation status
-Executed IQ 13/13, OQ 12/12, PQ 3/3; all 12 functional requirements traced to passing tests. One deviation (DEV-001) found and closed during OQ. See `validation/`.
+Executed IQ 17/17, OQ 12/12, PQ 5/5 (including 2 Playwright browser tests with screenshot evidence); all 12 functional requirements traced to passing tests. One deviation (DEV-001) found and closed during OQ. See `validation/`.
 
 ## Known limitations
 Single-site SQLite database; no backup/restore; no ERP or LIMS interface; demo passwords are public.
