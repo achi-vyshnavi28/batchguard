@@ -29,6 +29,9 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="BatchGuard", lifespan=lifespan)
+from batchguard.api import router as api_router  # noqa: E402
+
+app.include_router(api_router)
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("BATCHGUARD_SECRET", "dev-only-change-me"),
                    max_age=15 * 60)  # automatic logoff after 15 minutes (Part 11 session control)
 

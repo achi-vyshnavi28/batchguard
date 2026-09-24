@@ -1,0 +1,537 @@
+{
+  "info": {
+    "name": "BatchGuard API v1",
+    "description": "API regression suite: auth, roles, input validation, GxP rules (OOS deviation, no double entry), ALCOA+, audit-trail integrity.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 Health check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "health"
+          ]
+        },
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "pm.test(\"status ok\", () => pm.expect(pm.response.json().status).to.eql(\"ok\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Batches without login are refused",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches"
+          ]
+        },
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"401 when not logged in\", () => pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Login with wrong password is refused",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "login"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"op2\",\n  \"password\": \"not-the-password\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"401 on wrong password\", () => pm.response.to.have.status(401));",
+              "pm.test(\"generic message (no username enumeration)\", () => pm.expect(pm.response.json().error).to.eql(\"Invalid username or password.\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Login as supervisor",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "login"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"sup1\",\n  \"password\": \"{{sup1Password}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+              "pm.test(\"role is supervisor\", () => pm.expect(pm.response.json().role).to.eql(\"supervisor\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Invalid batch number is rejected",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"template_id\": 1,\n  \"batch_no\": \"x\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"422 for too-short batch number\", () => pm.response.to.have.status(422));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Create batch",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"template_id\": 1,\n  \"batch_no\": \"B-PM-{{$timestamp}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"201 Created\", () => pm.response.to.have.status(201));",
+              "const b = pm.response.json();",
+              "pm.test(\"starts in progress\", () => pm.expect(b.status).to.eql(\"in_progress\"));",
+              "pm.test(\"5 steps, all 5 blocking release\", () => { pm.expect(b.steps).to.have.lengthOf(5); pm.expect(b.release_blockers).to.have.lengthOf(5); });",
+              "pm.collectionVariables.set(\"batchId\", b.id);",
+              "pm.collectionVariables.set(\"stepApi\", b.steps.find(s => s.seq === 1).step_id);",
+              "pm.collectionVariables.set(\"stepHardness\", b.steps.find(s => s.seq === 4).step_id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Supervisor cannot record values",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}",
+            "entries"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"step_id\": \"{{stepApi}}\",\n  \"value\": 50\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"403 Forbidden\", () => pm.response.to.have.status(403));",
+              "pm.test(\"explains the role rule\", () => pm.expect(pm.response.json().error).to.include(\"not allowed to record\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Login as operator",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "login"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"op1\",\n  \"password\": \"{{op1Password}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"role is operator\", () => pm.expect(pm.response.json().role).to.eql(\"operator\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Record in-spec value",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}",
+            "entries"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"step_id\": \"{{stepApi}}\",\n  \"value\": 50.0\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"201 Created\", () => pm.response.to.have.status(201));",
+              "pm.test(\"no deviation\", () => pm.expect(pm.response.json().deviation_ids).to.be.empty);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Out-of-spec value raises a deviation",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}",
+            "entries"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"step_id\": \"{{stepHardness}}\",\n  \"value\": 13\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"201 Created\", () => pm.response.to.have.status(201));",
+              "pm.test(\"one deviation raised\", () => pm.expect(pm.response.json().deviation_ids).to.have.lengthOf(1));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 Recording the same step twice is refused",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}/entries",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}",
+            "entries"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"step_id\": \"{{stepApi}}\",\n  \"value\": 49.9\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"403 Forbidden\", () => pm.response.to.have.status(403));",
+              "pm.test(\"points to the correction workflow\", () => pm.expect(pm.response.json().error).to.include(\"correction\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Batch shows values and the open deviation",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}"
+          ]
+        },
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const b = pm.response.json();",
+              "pm.test(\"API weight recorded\", () => pm.expect(b.steps.find(s => s.seq === 1).value).to.eql(50));",
+              "pm.test(\"deviation blocks release\", () => pm.expect(b.release_blockers.join(\" \")).to.include(\"Deviation\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 ALCOA+ report has nine principles",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/batches/{{batchId}}/alcoa",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "batches",
+            "{{batchId}}",
+            "alcoa"
+          ]
+        },
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"9 principles\", () => pm.expect(pm.response.json()).to.have.lengthOf(9));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 Audit trail hash chain is intact",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/audit/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "audit",
+            "verify"
+          ]
+        },
+        "header": []
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"chain intact\", () => pm.expect(pm.response.json().intact).to.be.true);"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "batchId",
+      "value": ""
+    },
+    {
+      "key": "stepApi",
+      "value": ""
+    },
+    {
+      "key": "stepHardness",
+      "value": ""
+    }
+  ]
+}
