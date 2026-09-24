@@ -75,7 +75,7 @@ def installation_qualification() -> list[dict]:
 def run_tests(out_dir: Path) -> list[dict]:
     """OQ (tests/test_oq.py) and PQ (tests/test_web.py) with raw log kept as evidence."""
     results_file = out_dir / "results_raw.json"
-    env = {**os.environ, "VALIDATION_RESULTS": str(results_file)}
+    env = {**os.environ, "VALIDATION_RESULTS": str(results_file), "EVIDENCE_DIR": str(out_dir / "evidence")}
     proc = subprocess.run([sys.executable, "-m", "pytest", "-v", "-p", "no:cacheprovider"], cwd=ROOT, env=env,
                           capture_output=True, text=True)
     (out_dir / "test_log.txt").write_text(proc.stdout + proc.stderr, encoding="utf-8")
@@ -97,7 +97,8 @@ def main() -> None:
     iq = installation_qualification()
     tests = run_tests(out_dir)
     oq = [t for t in tests if "test_oq" in t["test"]]
-    pq = [t for t in tests if "test_web" in t["test"]]
+    pq = [t for t in tests if "test_web" in t["test"] or "tests/ui/" in t["test"]]
+    screenshots = sorted(p.name for p in (out_dir / "evidence").glob("*.png"))
 
     by_frs: dict[str, list[dict]] = {}
     for t in tests:
@@ -136,10 +137,14 @@ Each test exercises one functional requirement, including negative cases (wrong 
         ['Test', 'FRS', 'Result', 'Duration (s)', 'Error'])}
 
 ## 3. Performance Qualification (PQ)
-End-to-end batch lifecycle through the web UI by three users (operator, supervisor, QA).
+End-to-end batch lifecycle through the web UI by three users (operator, supervisor, QA): HTTP-level tests
+(`tests/test_web.py`) and real-browser tests (`tests/ui/`, Playwright/Chromium) with screenshot evidence.
 
 {_table([[t['test'].split('::')[-1], t['frs'] or '—', t['outcome'].upper(), t['duration_s'], t['error'] or ''] for t in pq],
         ['Test', 'FRS', 'Result', 'Duration (s)', 'Error'])}
+
+### Screenshot evidence (`evidence/`)
+{chr(10).join(f"- `{n}`" for n in screenshots) or "- none"}
 
 ## 4. Requirements traceability matrix (URS → FRS → test → result)
 {_table(rtm_rows, ['URS', 'Risk', 'FRS', 'Verified by', 'Result'])}
@@ -154,7 +159,7 @@ End-to-end batch lifecycle through the web UI by three users (operator, supervis
 ## 6. Conclusion
 {'All acceptance criteria met. The system is fit for its intended (demonstration) use.' if all_pass else 'Acceptance criteria NOT met. Raise deviations for each failure before release.'}
 
-Raw evidence: `test_log.txt` (full pytest output), `results.json`.
+Raw evidence: `test_log.txt` (full pytest output), `results.json`, `evidence/*.png` (UI screenshots).
 """
     (out_dir / "executed_validation_report.md").write_text(report, encoding="utf-8")
     (out_dir / "results.json").write_text(json.dumps({"iq": iq, "tests": tests}, indent=2), encoding="utf-8")

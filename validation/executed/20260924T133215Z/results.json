@@ -6,7 +6,7 @@
       "expected": "3.12.x",
       "actual": "3.12.8",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.fastapi",
@@ -14,7 +14,7 @@
       "expected": "0.141.1",
       "actual": "0.141.1",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.httpx",
@@ -22,7 +22,7 @@
       "expected": "0.28.1",
       "actual": "0.28.1",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.itsdangerous",
@@ -30,7 +30,7 @@
       "expected": "2.2.0",
       "actual": "2.2.0",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.Jinja2",
@@ -38,7 +38,7 @@
       "expected": "3.1.6",
       "actual": "3.1.6",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.pytest",
@@ -46,7 +46,7 @@
       "expected": "9.1.1",
       "actual": "9.1.1",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.python-multipart",
@@ -54,7 +54,7 @@
       "expected": "0.0.32",
       "actual": "0.0.32",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.PyYAML",
@@ -62,7 +62,7 @@
       "expected": "6.0.3",
       "actual": "6.0.3",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.SQLAlchemy",
@@ -70,7 +70,7 @@
       "expected": "2.0.54",
       "actual": "2.0.54",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-02.uvicorn",
@@ -78,7 +78,23 @@
       "expected": "0.53.0",
       "actual": "0.53.0",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:15+00:00"
+    },
+    {
+      "id": "IQ-02.playwright",
+      "description": "Package playwright installed at pinned version",
+      "expected": "1.63.0",
+      "actual": "1.63.0",
+      "result": "pass",
+      "at": "2026-09-24T13:32:15+00:00"
+    },
+    {
+      "id": "IQ-02.pytest-playwright",
+      "description": "Package pytest-playwright installed at pinned version",
+      "expected": "0.9.0",
+      "actual": "0.9.0",
+      "result": "pass",
+      "at": "2026-09-24T13:32:15+00:00"
     },
     {
       "id": "IQ-03",
@@ -86,7 +102,7 @@
       "expected": "audit_trail, batches, deviations, signatures, step_entries, template_steps, templates, users",
       "actual": "audit_trail, batches, deviations, signatures, step_entries, template_steps, templates, users",
       "result": "pass",
-      "at": "2026-09-24T13:15:50+00:00"
+      "at": "2026-09-24T13:32:16+00:00"
     },
     {
       "id": "IQ-04",
@@ -94,7 +110,7 @@
       "expected": "5 steps, 4 users",
       "actual": "5 steps, 4 users",
       "result": "pass",
-      "at": "2026-09-24T13:15:51+00:00"
+      "at": "2026-09-24T13:32:16+00:00"
     },
     {
       "id": "IQ-05",
@@ -102,7 +118,7 @@
       "expected": "alcoa.html, audit.html, base.html, batch.html, home.html, login.html",
       "actual": "alcoa.html, audit.html, base.html, batch.html, home.html, login.html",
       "result": "pass",
-      "at": "2026-09-24T13:15:51+00:00"
+      "at": "2026-09-24T13:32:16+00:00"
     }
   ],
   "tests": [
@@ -112,7 +128,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.59
+      "duration_s": 0.464
     },
     {
       "test": "tests/test_oq.py::test_frs02_roles_are_enforced",
@@ -120,7 +136,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.155
+      "duration_s": 0.104
     },
     {
       "test": "tests/test_oq.py::test_frs03_entries_are_attributable_and_contemporaneous",
@@ -128,7 +144,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.006
+      "duration_s": 0.004
     },
     {
       "test": "tests/test_oq.py::test_frs04_out_of_spec_value_raises_deviation",
@@ -136,7 +152,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.009
+      "duration_s": 0.006
     },
     {
       "test": "tests/test_oq.py::test_frs05_corrections_keep_the_original_and_need_a_reason",
@@ -144,7 +160,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.006
+      "duration_s": 0.003
     },
     {
       "test": "tests/test_oq.py::test_frs06_signature_requires_password_and_records_name_time_meaning",
@@ -152,7 +168,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.304
+      "duration_s": 0.231
     },
     {
       "test": "tests/test_oq.py::test_frs07_two_person_rule",
@@ -160,7 +176,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.184
+      "duration_s": 0.113
     },
     {
       "test": "tests/test_oq.py::test_frs08_release_blocked_until_complete_verified_and_deviations_closed",
@@ -168,7 +184,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 1.118
+      "duration_s": 0.622
     },
     {
       "test": "tests/test_oq.py::test_frs09_audit_trail_detects_tampering",
@@ -176,7 +192,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.015
+      "duration_s": 0.011
     },
     {
       "test": "tests/test_oq.py::test_frs10_released_batch_is_locked",
@@ -184,7 +200,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.787
+      "duration_s": 0.785
     },
     {
       "test": "tests/test_oq.py::test_frs11_alcoa_report",
@@ -192,7 +208,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.023
+      "duration_s": 0.057
     },
     {
       "test": "tests/test_oq.py::test_frs12_deviation_closure_needs_qa_signature_and_summary",
@@ -200,7 +216,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.339
+      "duration_s": 0.193
     },
     {
       "test": "tests/test_web.py::test_pq_full_batch_lifecycle",
@@ -208,7 +224,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 2.829
+      "duration_s": 1.663
     },
     {
       "test": "tests/test_web.py::test_ui_blocks_actions_outside_role",
@@ -216,7 +232,7 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 1.056
+      "duration_s": 0.704
     },
     {
       "test": "tests/test_web.py::test_unauthenticated_users_are_redirected",
@@ -224,7 +240,23 @@
       "doc": "",
       "outcome": "pass",
       "error": null,
-      "duration_s": 0.664
+      "duration_s": 0.396
+    },
+    {
+      "test": "tests/ui/test_playwright_pq.py::test_pq_ui_batch_lifecycle_with_screenshots[chromium]",
+      "frs": "FRS-08",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 5.717
+    },
+    {
+      "test": "tests/ui/test_playwright_pq.py::test_pq_ui_lockout_after_three_failed_logins[chromium]",
+      "frs": "FRS-01",
+      "doc": "",
+      "outcome": "pass",
+      "error": null,
+      "duration_s": 1.188
     }
   ]
 }
