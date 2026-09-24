@@ -1,0 +1,50 @@
+Summary,Issue Type,Description,Priority,Labels
+US-101 Record equipment cleaning,Story,"As an operator, I want to record that I cleaned a piece of equipment, so QA can confirm it was clean before use.
+
+Acceptance criteria:
+* The operator selects the equipment, the cleaning type (minor/major) and confirms with an e-signature.
+* The cleaning record shows who cleaned it and when.
+* A supervisor verifies major cleanings.",Medium,BatchGuard-1.1
+US-102 Block batch start on dirty equipment,Story,"As QA, I want batches not to start on equipment that isn't clean, so we avoid cross-contamination.
+
+Acceptance criteria:
+* A batch cannot be created if its equipment has not been cleaned since its last use.
+* Cleaning is valid for 72 hours.",Medium,BatchGuard-1.1
+US-103 Reject a batch,Story,"As QA, I want to reject a failed batch so it is clearly not released.
+
+Acceptance criteria:
+* QA can reject a batch that is in review.
+* Rejection requires a reason and an e-signature.
+* The system should handle rejection quickly and be user-friendly.",Medium,BatchGuard-1.1
+US-104 Override,Story,"As QA, I want to override the cleaning check when needed.
+
+Acceptance criteria:
+* QA can override as needed.",Medium,BatchGuard-1.1
+US-105 Cleaning report,Story,"As a QA manager, I want a report of cleanings.
+
+Acceptance criteria:
+* The report shows cleanings. TBD which filters.",Medium,BatchGuard-1.1
+[Spec gap] US-103: The system should handle rejection quickly and be user-friendly.,Task,"Rule: vague_term
+Why: 'quickly' has no pass/fail criterion.
+Question: What response time, measured how (e.g. p95 < 2 s)?",Medium,BatchGuard-1.1 requirement-gap
+[Spec gap] US-103: The system should handle rejection quickly and be user-friendly.,Task,"Rule: vague_term
+Why: 'user-friendly' has no pass/fail criterion.
+Question: Which usability criterion (e.g. task done in <= 3 clicks, no training)?",Medium,BatchGuard-1.1 requirement-gap
+[Spec gap] US-103: The system should handle rejection quickly and be user-friendly.,Task,"Rule: weak_modal
+Why: 'should/may' makes it unclear whether this is mandatory.
+Question: Is this mandatory ('must') or optional?",Low,BatchGuard-1.1 requirement-gap
+[Spec gap] US-104: Override,Task,"Rule: thin_acceptance_criteria
+Why: Only 1 acceptance criterion; negative and boundary behaviour are undefined.
+Question: What should happen on invalid input, wrong role, and at the limits?",Medium,BatchGuard-1.1 requirement-gap
+[Spec gap] US-104: QA can override as needed.,Task,"Rule: vague_term
+Why: 'as needed' has no pass/fail criterion.
+Question: Under which exact conditions, and who decides?",High,BatchGuard-1.1 requirement-gap
+[Spec gap] US-104: QA can override as needed.,Task,"Rule: gxp_control_missing
+Why: A GMP-relevant action (override/delete/change/reject) without a required reason, e-signature or audit-trail entry (21 CFR 11.10(e), 11.50).
+Question: Must this action require a reason, an e-signature and an audit-trail entry? Who may perform it?",High,BatchGuard-1.1 requirement-gap
+[Spec gap] US-105: Cleaning report,Task,"Rule: thin_acceptance_criteria
+Why: Only 1 acceptance criterion; negative and boundary behaviour are undefined.
+Question: What should happen on invalid input, wrong role, and at the limits?",Medium,BatchGuard-1.1 requirement-gap
+[Spec gap] US-105: The report shows cleanings. TBD which filters.,Task,"Rule: placeholder
+Why: Requirement is not decided yet.
+Question: Please decide and specify before development starts.",High,BatchGuard-1.1 requirement-gap
