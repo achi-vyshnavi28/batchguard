@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block title %} · {{ batch.batch_no }}{% endblock %}{% block body %}
+<div class="card"><h2>{{ batch.batch_no }} <span class="pill {{ batch.status }}">{{ batch.status.replace("_", " ") }}</span></h2>
+<p class="muted">{{ batch.template.product }} · master record v{{ batch.template.version }} · <a href="/batches/{{ batch.id }}/alcoa">ALCOA+ report</a></p>
+<table><tr><th>#</th><th>Instruction</th><th>Spec</th><th>Value</th><th>Recorded</th><th>Signatures</th><th>Actions</th></tr>
+{% for r in rows %}<tr>
+<td>{{ r.step.seq }}{% if r.step.critical %}<br><span class="pill in_review" title="Needs second-person verification">critical</span>{% endif %}</td>
+<td>{{ r.step.instruction }}<br><span class="muted">{{ r.step.parameter }}</span></td>
+<td>{{ r.step.min_value }}–{{ r.step.max_value }} {{ r.step.unit }}</td>
+<td>{% if r.entry %}<span class="{{ 'oos' if r.oos }}">{{ r.entry.value }} {{ r.step.unit }}</span>{% if r.oos %}<br><span class="oos">out of spec</span>{% endif %}
+{% if r.entry.correction_reason %}<br><span class="muted">corrected: {{ r.entry.correction_reason }}</span>{% endif %}
+{% if r.history %}<details><summary>{{ r.history|length }} earlier value(s)</summary>{% for h in r.history %}<div class="muted">{{ h.value }} by {{ users[h.recorded_by].full_name }} at {{ h.recorded_at.strftime("%H:%M:%S") }}</div>{% endfor %}</details>{% endif %}
+{% else %}<span class="muted">—</span>{% endif %}</td>
+<td>{% if r.entry %}{{ users[r.entry.recorded_by].full_name }}<br><span class="muted">{{ r.entry.recorded_at.strftime("%Y-%m-%d %H:%M:%S") }} UTC</span>{% endif %}</td>
+<td>{% for s in r.signatures %}<div class="muted">✔ {{ s.meaning }}: {{ s.printed_name }}, {{ s.signed_at.strftime("%Y-%m-%d %H:%M:%S") }} UTC</div>{% endfor %}</td>
+<td>{% if batch.status == "in_progress" %}
+{% if not r.entry and user.role == "operator" %}<form class="inline" method="post" action="/batches/{{ batch.id }}/record"><input type="hidden" name="step_id" value="{{ r.step.id }}"><input name="value" type="number" step="any" required aria-label="value for step {{ r.step.seq }}" style="width:90px"><button>Record</button></form>{% endif %}
+{% if r.entry and user.role in ("operator", "supervisor") %}<details><summary>Correct</summary><form class="inline" method="post" action="/batches/{{ batch.id }}/correct"><input type="hidden" name="entry_id" value="{{ r.entry.id }}"><input name="value" type="number" step="any" required style="width:80px" aria-label="corrected value for step {{ r.step.seq }}"><input name="reason" placeholder="Reason (required)" aria-label="correction reason for step {{ r.step.seq }}"><button class="secondary">Save</button></form></details>{% endif %}
+{% if r.entry and r.step.critical and user.role in ("supervisor", "qa") %}<form class="inline" method="post" action="/batches/{{ batch.id }}/verify"><input type="hidden" name="entry_id" value="{{ r.entry.id }}"><input name="password" type="password" placeholder="Password to sign" required aria-label="password to verify step {{ r.step.seq }}" style="width:130px"><button class="secondary">Verify</button></form>{% endif %}
+{% endif %}</td></tr>{% endfor %}</table></div>
+
+<div class="card"><h3>Deviations</h3>
+<table><tr><th>#</th><th>Description</th><th>Severity</th><th>Status</th><th></th></tr>
+{% for d in deviations %}<tr><td>{{ d.id }}</td><td>{{ d.description }}{% if d.closure_reason %}<br><span class="muted">Closure: {{ d.closure_reason }}</span>{% endif %}</td><td>{{ d.severity }}</td><td><span class="pill {{ d.status }}">{{ d.status }}</span></td>
+<td>{% if d.status == "open" and user.role == "qa" %}<form class="inline" method="post" action="/batches/{{ batch.id }}/deviations/{{ d.id }}/close"><input name="reason" placeholder="Investigation summary (min 20 chars)" required aria-label="closure summary for deviation {{ d.id }}"><input name="password" type="password" placeholder="Password" required aria-label="password to close deviation {{ d.id }}" style="width:110px"><button class="secondary">Close</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="5" class="muted">None.</td></tr>{% endfor %}</table>
+{% if batch.status == "in_progress" %}<form class="inline" method="post" action="/batches/{{ batch.id }}/deviations"><input name="description" placeholder="Describe a deviation" required style="min-width:320px" aria-label="new deviation"><select name="severity" aria-label="severity"><option>minor</option><option selected>major</option><option>critical</option></select><button class="secondary">Raise deviation</button></form>{% endif %}</div>
+
+<div class="card"><h3>Review and release</h3>
+{% if blockers %}<p><strong>Release blocked:</strong></p><ul>{% for b in blockers %}<li>{{ b }}</li>{% endfor %}</ul>{% else %}<p class="muted">No blockers.</p>{% endif %}
+{% for s in batch_signatures %}<div class="muted">✔ {{ s.meaning.replace("_", " ") }}: {{ s.printed_name }}, {{ s.signed_at.strftime("%Y-%m-%d %H:%M:%S") }} UTC</div>{% endfor %}
+{% if batch.status == "in_progress" and user.role == "supervisor" %}<form class="inline" method="post" action="/batches/{{ batch.id }}/submit"><input name="password" type="password" placeholder="Password to sign" required aria-label="password to submit for review"><button>Submit for QA review</button></form>{% endif %}
+{% if batch.status == "in_review" and user.role == "qa" %}<form class="inline" method="post" action="/batches/{{ batch.id }}/release"><input name="password" type="password" placeholder="Password to sign" required aria-label="password to release"><button>Release batch</button></form>{% endif %}
+</div>{% endblock %}

@@ -1,0 +1,38 @@
+# Single source of truth for the URS and FRS documents and the traceability matrix.
+# Tests reference FRS ids with @pytest.mark.frs("FRS-xx"); tools/run_validation.py links them automatically.
+
+system: BatchGuard electronic batch record (eBR)
+version: 1.0.0
+gamp_category: 5  # custom application
+intended_use: >
+  Record the execution of tablet-manufacturing batches against an approved master batch record,
+  capture electronic signatures, manage deviations, and support QA release decisions.
+  Demonstration system; not used for commercial GMP manufacturing.
+
+urs:
+  - {id: URS-01, text: "Only authorised, identified users can access the system.", risk: high}
+  - {id: URS-02, text: "Users can only perform actions permitted for their role.", risk: high}
+  - {id: URS-03, text: "Every recorded value shows who recorded it and when, at the time it was observed.", risk: high}
+  - {id: URS-04, text: "Values outside the approved specification are flagged and investigated.", risk: high}
+  - {id: URS-05, text: "Original records are never lost; corrections are justified and visible.", risk: high}
+  - {id: URS-06, text: "Electronic signatures are legally equivalent to handwritten ones (21 CFR 11.50, 11.100, 11.200).", risk: high}
+  - {id: URS-07, text: "Critical steps are independently verified by a second person.", risk: high}
+  - {id: URS-08, text: "A batch cannot be released while the record is incomplete or deviations are open.", risk: high}
+  - {id: URS-09, text: "All GMP-relevant actions are captured in a secure, tamper-evident audit trail (21 CFR 11.10(e)).", risk: high}
+  - {id: URS-10, text: "Released records cannot be changed.", risk: high}
+  - {id: URS-11, text: "Data integrity can be reviewed against ALCOA+ principles per batch.", risk: medium}
+  - {id: URS-12, text: "Deviations are closed only by QA with a documented investigation.", risk: high}
+
+frs:
+  - {id: FRS-01, urs: URS-01, text: "Username + password login (PBKDF2-hashed); account locks after 3 failed attempts; sessions expire after 15 minutes."}
+  - {id: FRS-02, urs: URS-02, text: "Role permissions: operators record; supervisors create batches, verify and submit; QA verifies, closes deviations and releases."}
+  - {id: FRS-03, urs: URS-03, text: "Entries store user and server timestamp; observation time cannot be in the future or more than 30 minutes before recording."}
+  - {id: FRS-04, urs: URS-04, text: "An out-of-specification value automatically raises a deviation linked to the entry."}
+  - {id: FRS-05, urs: URS-05, text: "Entries cannot be overwritten or deleted; a correction requires a reason (>= 10 chars) and supersedes, not replaces, the original."}
+  - {id: FRS-06, urs: URS-06, text: "Signing requires password re-entry and a meaning; the manifest shows printed name, date/time (UTC) and meaning."}
+  - {id: FRS-07, urs: URS-07, text: "The person who recorded a critical step cannot verify it; the batch reviewer cannot also release it."}
+  - {id: FRS-08, urs: URS-08, text: "Submit/release is blocked while steps are missing, critical steps unverified, or deviations open; release needs a QA signature."}
+  - {id: FRS-09, urs: URS-09, text: "Append-only audit trail (user, time, action, before/after, reason) hash-chained with SHA-256; chain verification detects edits."}
+  - {id: FRS-10, urs: URS-10, text: "Released or rejected batches reject all further changes."}
+  - {id: FRS-11, urs: URS-11, text: "Per-batch ALCOA+ report with automatic checks for all nine principles."}
+  - {id: FRS-12, urs: URS-12, text: "Deviation closure requires QA role, an investigation summary (>= 20 chars) and an e-signature."}

@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %} · ALCOA+{% endblock %}{% block body %}
+<div class="card"><h2>ALCOA+ report: {{ batch.batch_no }}</h2><p class="muted"><a href="/batches/{{ batch.id }}">Back to batch</a></p>
+<table><tr><th>Principle</th><th>Result</th><th>Detail</th></tr>
+{% for r in report %}<tr><td>{{ r.principle }}</td><td><span class="pill {{ r.status }}">{{ r.status }}</span></td><td>{{ r.detail }}</td></tr>{% endfor %}</table></div>
+{% endblock %}

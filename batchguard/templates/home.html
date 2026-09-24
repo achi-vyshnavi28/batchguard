@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<div class="card"><h2>Batches</h2>
+<table><tr><th>Batch</th><th>Product</th><th>Status</th><th>Created</th></tr>
+{% for b in batches %}<tr><td><a href="/batches/{{ b.id }}">{{ b.batch_no }}</a></td><td>{{ b.template.product }} v{{ b.template.version }}</td>
+<td><span class="pill {{ b.status }}">{{ b.status.replace("_", " ") }}</span></td><td class="muted">{{ b.created_at.strftime("%Y-%m-%d %H:%M") }} UTC</td></tr>
+{% else %}<tr><td colspan="4" class="muted">No batches yet.</td></tr>{% endfor %}</table></div>
+{% if user.role == "supervisor" %}<div class="card"><h3>Start a batch</h3>
+<form class="inline" method="post" action="/batches"><select name="template_id" aria-label="master batch record">{% for t in templates_ %}<option value="{{ t.id }}">{{ t.product }} v{{ t.version }}</option>{% endfor %}</select>
+<input name="batch_no" placeholder="Batch number, e.g. B-2026-001" required aria-label="batch number"><button>Create</button></form></div>{% endif %}
+{% endblock %}

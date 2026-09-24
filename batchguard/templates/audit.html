@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %} · Audit trail{% endblock %}{% block body %}
+<div class="card"><h2>Audit trail</h2>
+<p>Hash chain: {% if intact %}<span class="pill pass">intact</span>{% else %}<span class="pill fail">tampered at event {{ broken }}</span>{% endif %}
+<span class="muted">Each event stores the hash of the one before it; any edit or deletion breaks the chain.</span></p>
+<table><tr><th>#</th><th>Time (UTC)</th><th>User</th><th>Action</th><th>Record</th><th>Before → After</th><th>Reason</th></tr>
+{% for e in events %}<tr><td>{{ e.id }}</td><td class="mono">{{ e.at.strftime("%Y-%m-%d %H:%M:%S") }}</td><td>{{ e.username }}</td><td>{{ e.action }}</td><td>{{ e.entity }} {{ e.entity_id or "" }}</td>
+<td class="mono">{{ e.before or "" }}{% if e.before %} → {% endif %}{{ e.after or "" }}</td><td>{{ e.reason or "" }}</td></tr>{% endfor %}</table></div>
+{% endblock %}
