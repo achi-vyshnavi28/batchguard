@@ -25,7 +25,23 @@ and **validated like a GxP system**: URS → FRS → risk assessment → IQ/OQ/P
 | 07 Deviation log | Includes a real deviation found during OQ, with root cause and fix |
 | `executed/<timestamp>/` | Executed report, traceability matrix, raw test log |
 
-Latest execution: **IQ 13/13 · OQ 12/12 · PQ 3/3 · 12/12 requirements traced to passing tests.**
+Latest execution: **IQ 17/17 · OQ 12/12 · PQ 5/5 (2 of them real-browser Playwright runs with screenshot evidence) · 12/12 requirements traced to passing tests.**
+
+## Testing beyond the protocols
+| Layer | Tool | What it proves |
+|---|---|---|
+| Unit / OQ | pytest | Each FRS requirement, tagged and traced |
+| UI / PQ | Playwright | Operator → supervisor → QA flow in a real browser; screenshots saved as objective evidence |
+| API | Postman + Newman | 14 requests, 24 assertions on `/api/v1` (auth, roles, 401/403/422 contracts, audit-chain check); see `postman/` |
+| Data | SQL | Product questions (right-first-time, deviation hot spots, review cycle time) in `qa/product_questions.sql` |
+
+## Product work: release 1.1 (cleaning log + batch rejection)
+- **PRD** `docs/prd/PRD-1.1_cleaning_log_and_rejection.md`, reviewed by **SpecCheck** (`python -m speccheck`): lints vague or untestable
+  requirements and missing GxP controls, drafts test cases with Gemini, and exports a versioned **Excel test library**,
+  a **Jira import CSV** and a spec review (`qa/`)
+- UAT plan, spec-review meeting notes, enablement one-pager, competitor teardown (`qa/`, `docs/product/`)
+- **Wireframes**: 6 screens in Figma ([BatchGuard wireframes](https://www.figma.com/design/r25fpOdui1TT7TynBe7snc/BatchGuard-wireframes)),
+  generated from `design/make_wireframes.py` (SVG sources in `design/wireframes/`)
 
 ## Run it
 ```bash
