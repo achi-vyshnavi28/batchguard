@@ -1,6 +1,11 @@
 {% extends "base.html" %}{% block title %} · Log in{% endblock %}{% block body %}
-<div class="card" style="max-width:380px;margin:40px auto">
-<h2>Log in</h2>
+<div class="card" style="max-width:520px;margin:40px auto">
+<h2 style="margin-bottom:4px">BatchGuard</h2>
+<p class="muted" style="margin-top:0">Electronic batch record for tablet manufacturing, built to 21 CFR Part 11 and ALCOA+:
+e-signatures with password re-entry, a tamper-evident audit trail, second-person verification, deviations and
+release blocking. Validated with IQ 17/17, OQ 12/12, PQ 5/5.
+<a href="https://github.com/achi-vyshnavi28/batchguard">Code and validation package</a></p>
+<h3>Log in</h3>
 <form method="post" action="/login">
 <p><label>Username<br><input name="username" autocomplete="username" required></label></p>
 <p><label>Password<br><input name="password" type="password" autocomplete="current-password" required></label></p>
@@ -9,7 +14,10 @@
 op1 or op2 (operator) · password <b>Operator#2026</b><br>
 sup1 (supervisor) · password <b>Supervisor#2026</b><br>
 qa1 (QA) · password <b>QualityA#2026</b></p>
-<p class="muted">Try it: as sup1 create a batch, as op1 record the steps (enter an out-of-spec hardness to raise a
-deviation), as sup1 verify, then as qa1 try to release. Accounts lock after 3 failed attempts (21 CFR Part 11), so if one
-is locked, use another user; the demo resets when the server restarts.</p></div>
+<p class="muted"><b>Quick tour (1 minute):</b> log in as <b>qa1</b> and open <b>B-2026-014</b> to see a complete
+released batch: verified critical steps, a correction that keeps the original value, an out-of-spec result and its
+closed deviation, and two separate release signatures. Then open <b>B-2026-015</b> (release blocked by an open
+deviation) and the <b>Audit trail</b> (hash chain verified).</p>
+<p class="muted">Accounts lock after 3 failed attempts (21 CFR Part 11); if one is locked, use another user. The demo
+resets when the server restarts.</p></div>
 {% endblock %}
