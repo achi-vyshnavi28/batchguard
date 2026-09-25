@@ -5,6 +5,11 @@
 <p><label>Username<br><input name="username" autocomplete="username" required></label></p>
 <p><label>Password<br><input name="password" type="password" autocomplete="current-password" required></label></p>
 <button type="submit">Log in</button></form>
-<p class="muted">Demo users: op1 / op2 (operator), sup1 (supervisor), qa1 (QA). Passwords are in the README.
-Accounts lock after 3 failed attempts; sessions end after 15 minutes idle.</p></div>
+<p class="muted">Demo users (portfolio demo, no real data):<br>
+op1 or op2 (operator) · password <b>Operator#2026</b><br>
+sup1 (supervisor) · password <b>Supervisor#2026</b><br>
+qa1 (QA) · password <b>QualityA#2026</b></p>
+<p class="muted">Try it: as sup1 create a batch, as op1 record the steps (enter an out-of-spec hardness to raise a
+deviation), as sup1 verify, then as qa1 try to release. Accounts lock after 3 failed attempts (21 CFR Part 11), so if one
+is locked, use another user; the demo resets when the server restarts.</p></div>
 {% endblock %}

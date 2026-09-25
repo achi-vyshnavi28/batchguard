@@ -1,0 +1,15 @@
+# One-click deploy on Render (free web service). The SQLite database lives on the instance's disk and is re-seeded
+# with the demo users and master record whenever the service restarts.
+services:
+  - type: web
+    name: batchguard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn batchguard.web:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: BATCHGUARD_SECRET
+        generateValue: true
