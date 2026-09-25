@@ -5,6 +5,9 @@ and **validated like a GxP system**: URS → FRS → risk assessment → IQ/OQ/P
 
 > Portfolio demonstration. Documents follow real Computer System Validation (CSV/CSA) practice; not used for GMP manufacturing.
 
+**Live demo: [batchguard.onrender.com](https://batchguard.onrender.com)** (demo accounts are shown on the login page; the free
+server sleeps when idle, so the first visit can take up to a minute). The Postman suite passes 24/24 assertions against it.
+
 ## What it enforces
 | Regulation / principle | How |
 |---|---|
