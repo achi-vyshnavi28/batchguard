@@ -44,7 +44,7 @@ Latest execution: **IQ 17/17 · OQ 12/12 · PQ 5/5 (2 of them real-browser Playw
   with more rules, a web app, traceability, and a held-out evaluation (rules 90% precision; rules + LLM 100% recall).
 - All documents in one place: [Notion workspace](https://app.notion.com/p/BatchGuard-eBR-validation-and-product-docs-3e58d914640c81ca9175c726b9da7547)
 - UAT plan, spec-review meeting notes, enablement one-pager, competitor teardown (`qa/`, `docs/product/`)
-- **Wireframes**: 6 screens in Figma ([BatchGuard wireframes](https://www.figma.com/design/r25fpOdui1TT7TynBe7snc/BatchGuard-wireframes)),
+- **Wireframes**: 6 screens in Figma ([BatchGuard wireframes](https://www.figma.com/design/r25fpOdui1TT7TynBe7snc/Wireframes--BatchGuard--RootCause--SpecCheck?node-id=0-1)),
   generated from `design/make_wireframes.py` (SVG sources in `design/wireframes/`)
 
 ## Run it
