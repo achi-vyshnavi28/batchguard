@@ -13,3 +13,5 @@ services:
         value: 3.12.8
       - key: BATCHGUARD_SECRET
         generateValue: true
+      - key: BATCHGUARD_DEMO
+        value: "1"

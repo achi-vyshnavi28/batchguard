@@ -166,3 +166,4 @@ def test_frs12_deviation_closure_needs_qa_signature_and_summary(world):
         close_deviation(w["db"], w["users"]["qa1"], "bad", dev_id, "Punch wear confirmed; tooling replaced, batch retested")
     dev = close_deviation(w["db"], w["users"]["qa1"], PW["qa1"], dev_id, "Punch wear confirmed; tooling replaced, batch retested")
     assert dev.status == "closed"
+

@@ -304,3 +304,41 @@ def seed(db: Session) -> dict:
     db.flush()
     audit(db, None, "seed", "template", t.id, after={"product": t.product, "version": t.version})
     return {"users": users, "template": t}
+
+
+def seed_demo_batches(db: Session) -> list[Batch]:
+    """Hosted demo only (BATCHGUARD_DEMO=1): three batches in different states, created through the same rules, signatures
+    and audit trail as any real batch, so a visitor sees the whole lifecycle without clicking through it first."""
+    u = {name: db.scalar(select(User).where(User.username == name)) for name in ("op1", "op2", "sup1", "qa1")}
+    pw = {"op1": "Operator#2026", "op2": "Operator#2026", "sup1": "Supervisor#2026", "qa1": "QualityA#2026"}
+    t = db.scalar(select(Template).limit(1))
+    step = {s.seq: s for s in t.steps}
+
+    def record(batch, values, by="op1"):
+        return {seq: record_value(db, u[by], batch.id, step[seq].id, v) for seq, v in values.items()}
+
+    def verify(entry, by="sup1"):
+        sign(db, u[by], pw[by], "step_entry", entry.id, "verified")
+
+    # 1. Released: hardness out of spec, deviation investigated and closed by QA, one corrected entry, two-person release.
+    released = create_batch(db, u["sup1"], t.id, "B-2026-014")
+    e = record(released, {1: 50.1, 2: 18, 3: 22.5, 4: 12.6, 5: 598})
+    e[3] = correct_value(db, u["op1"], e[3].id, 23.1, "Transcription error: thermometer read 23.1 °C")
+    for seq in (1, 4, 5):
+        verify(e[seq])
+    submit_for_review(db, u["sup1"], pw["sup1"], released.id)
+    dev = db.scalar(select(Deviation).where(Deviation.batch_id == released.id))
+    close_deviation(db, u["qa1"], pw["qa1"], dev.id,
+                    "Hardness tester found out of calibration; recalibrated and 10 retained tablets retested, mean 11.2 kP.")
+    release_batch(db, u["qa1"], pw["qa1"], released.id)
+
+    # 2. Blocked: all steps recorded, but an out-of-spec tablet weight raised a deviation that is still open.
+    blocked = create_batch(db, u["sup1"], t.id, "B-2026-015")
+    e = record(blocked, {1: 49.9, 2: 17, 3: 21.8, 4: 10.4, 5: 641}, by="op2")
+    for seq in (1, 4):
+        verify(e[seq])
+
+    # 3. In progress: two steps recorded, the critical one waiting for second-person verification.
+    running = create_batch(db, u["sup1"], t.id, "B-2026-016")
+    record(running, {1: 50.2, 2: 16})
+    return [released, blocked, running]

@@ -25,6 +25,9 @@ async def lifespan(_app: FastAPI):
         if db.scalar(select(User).limit(1)) is None:
             svc.seed(db)
             db.commit()
+        if os.getenv("BATCHGUARD_DEMO") == "1" and db.scalar(select(Batch).limit(1)) is None:
+            svc.seed_demo_batches(db)  # hosted demo: show the lifecycle immediately
+            db.commit()
     yield
 
 
