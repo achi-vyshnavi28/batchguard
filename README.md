@@ -38,7 +38,11 @@ Latest execution: **IQ 17/17 · OQ 12/12 · PQ 5/5 (2 of them real-browser Playw
 ## Product work: release 1.1 (cleaning log + batch rejection)
 - **PRD** `docs/prd/PRD-1.1_cleaning_log_and_rejection.md`, reviewed by **SpecCheck** (`python -m speccheck`): lints vague or untestable
   requirements and missing GxP controls, drafts test cases with Gemini, and exports a versioned **Excel test library**,
-  a **Jira import CSV** and a spec review (`qa/`)
+  a **Jira import CSV** and a spec review (`qa/`). The gaps became the live Jira backlog; 4 were closed by the
+  spec-review decisions.
+  SpecCheck has since become its own project, **[github.com/achi-vyshnavi28/speccheck](https://github.com/achi-vyshnavi28/speccheck)**,
+  with more rules, a web app, traceability, and a held-out evaluation (rules 90% precision; rules + LLM 100% recall).
+- All documents in one place: [Notion workspace](https://app.notion.com/p/BatchGuard-eBR-validation-and-product-docs-3e58d914640c81ca9175c726b9da7547)
 - UAT plan, spec-review meeting notes, enablement one-pager, competitor teardown (`qa/`, `docs/product/`)
 - **Wireframes**: 6 screens in Figma ([BatchGuard wireframes](https://www.figma.com/design/r25fpOdui1TT7TynBe7snc/BatchGuard-wireframes)),
   generated from `design/make_wireframes.py` (SVG sources in `design/wireframes/`)
