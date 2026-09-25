@@ -18,6 +18,11 @@ HERE = Path(__file__).parent
 DB_URL = os.getenv("BATCHGUARD_DB", "sqlite:///batchguard.sqlite3")
 SessionLocal = make_session_factory(DB_URL)
 templates = Jinja2Templates(directory=HERE / "templates")
+# Hosted portfolio demo only: one-click entry and on-page guides. Off unless BATCHGUARD_DEMO=1, so the validated
+# behaviour (password login, e-signatures with password re-entry) is unchanged everywhere else.
+DEMO = os.getenv("BATCHGUARD_DEMO") == "1"
+DEMO_PASSWORDS = {"op1": "Operator#2026", "op2": "Operator#2026", "sup1": "Supervisor#2026", "qa1": "QualityA#2026"}
+templates.env.globals.update(demo=DEMO, demo_passwords=DEMO_PASSWORDS)
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
@@ -84,6 +89,20 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
             return _back("/login")
         request.session["uid"] = user.id
         return _back("/")
+
+
+@app.post("/demo-login")
+def demo_login(request: Request, username: str = Form(...)):
+    """Hosted demo: enter as a role without typing a password. E-signatures still require the password (Part 11)."""
+    if not DEMO or username not in ("op1", "sup1", "qa1"):
+        return HTMLResponse("Not found", status_code=404)
+    with SessionLocal() as db:
+        user = db.scalar(select(User).where(User.username == username))
+        svc.audit(db, user, "demo_login", "user", user.id)
+        db.commit()
+        request.session["uid"] = user.id
+        released = db.scalar(select(Batch).where(Batch.batch_no == "B-2026-014"))
+        return _back(f"/batches/{released.id}" if username == "qa1" and released else "/")
 
 
 @app.get("/logout")

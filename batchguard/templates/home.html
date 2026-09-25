@@ -1,4 +1,13 @@
 {% extends "base.html" %}{% block body %}
+{% if demo %}<div class="card guide"><h3>Start here</h3><ul>
+{% for b in batches if b.batch_no in ("B-2026-014", "B-2026-015", "B-2026-016") %}
+<li><a href="/batches/{{ b.id }}"><b>{{ b.batch_no }}</b></a>:
+{% if b.batch_no == "B-2026-014" %}fully released. Every critical step verified by a second person, one corrected value with its original kept, an out-of-spec result investigated and closed, then reviewed and released by two different people.
+{% elif b.batch_no == "B-2026-015" %}release blocked. The tablet weight was out of specification, so a deviation was raised automatically and must be closed by QA first.
+{% else %}in progress. A critical step is waiting for second-person verification.{% endif %}</li>
+{% endfor %}
+<li><a href="/audit"><b>Audit trail</b></a>: every action above, hash-chained so any edit to the history is detected.</li>
+</ul></div>{% endif %}
 <div class="card"><h2>Batches</h2>
 <table><tr><th>Batch</th><th>Product</th><th>Status</th><th>Created</th></tr>
 {% for b in batches %}<tr><td><a href="/batches/{{ b.id }}">{{ b.batch_no }}</a></td><td>{{ b.template.product }} v{{ b.template.version }}</td>

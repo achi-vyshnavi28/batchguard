@@ -1,23 +1,32 @@
 {% extends "base.html" %}{% block title %} · Log in{% endblock %}{% block body %}
-<div class="card" style="max-width:520px;margin:40px auto">
-<h2 style="margin-bottom:4px">BatchGuard</h2>
-<p class="muted" style="margin-top:0">Electronic batch record for tablet manufacturing, built to 21 CFR Part 11 and ALCOA+:
-e-signatures with password re-entry, a tamper-evident audit trail, second-person verification, deviations and
-release blocking. Validated with IQ 17/17, OQ 12/12, PQ 5/5.
-<a href="https://github.com/achi-vyshnavi28/batchguard">Code and validation package</a></p>
-<h3>Log in</h3>
-<form method="post" action="/login">
-<p><label>Username<br><input name="username" autocomplete="username" required></label></p>
-<p><label>Password<br><input name="password" type="password" autocomplete="current-password" required></label></p>
-<button type="submit">Log in</button></form>
-<p class="muted">Demo users (portfolio demo, no real data):<br>
-op1 or op2 (operator) · password <b>Operator#2026</b><br>
-sup1 (supervisor) · password <b>Supervisor#2026</b><br>
-qa1 (QA) · password <b>QualityA#2026</b></p>
-<p class="muted"><b>Quick tour (1 minute):</b> log in as <b>qa1</b> and open <b>B-2026-014</b> to see a complete
-released batch: verified critical steps, a correction that keeps the original value, an out-of-spec result and its
-closed deviation, and two separate release signatures. Then open <b>B-2026-015</b> (release blocked by an open
-deviation) and the <b>Audit trail</b> (hash chain verified).</p>
-<p class="muted">Accounts lock after 3 failed attempts (21 CFR Part 11); if one is locked, use another user. The demo
-resets when the server restarts.</p></div>
+{% if demo %}
+<div class="card hero">
+  <p class="eyebrow">Portfolio project · electronic batch record for pharma manufacturing</p>
+  <h1>BatchGuard</h1>
+  <p class="lead">When a pharma plant makes a batch of tablets, every step must be recorded, checked by a second person
+  and signed before the batch can be released. BatchGuard does this electronically, following the FDA's rules for
+  electronic records (21 CFR Part 11) and data integrity (ALCOA+).</p>
+  <div class="facts">
+    <div><b>Can't be faked</b><span>Every change goes into a tamper-evident audit trail; nothing is ever overwritten.</span></div>
+    <div><b>Can't skip checks</b><span>A batch is blocked from release until every step is verified and every problem is closed.</span></div>
+    <div><b>Validated</b><span>Tested like real GxP software: IQ 17/17, OQ 12/12, PQ 5/5, all requirements traced.</span></div>
+  </div>
+</div>
+<div class="card">
+  <h2>See it in one click</h2>
+  <div class="roles">
+    <form method="post" action="/demo-login"><input type="hidden" name="username" value="qa1">
+      <button class="role primary">Enter as QA reviewer<small>Start here: opens a fully released batch with its signatures, a corrected value and a closed deviation</small></button></form>
+    <form method="post" action="/demo-login"><input type="hidden" name="username" value="sup1">
+      <button class="role">Enter as supervisor<small>Create batches, verify critical steps, submit for review</small></button></form>
+    <form method="post" action="/demo-login"><input type="hidden" name="username" value="op1">
+      <button class="role">Enter as operator<small>Record values; try an out-of-spec result to see a deviation raised</small></button></form>
+  </div>
+  <p class="muted">Demo data only. Signing still asks for the password again, as Part 11 requires; the demo password is
+  shown at the top of every page. <a href="https://github.com/achi-vyshnavi28/batchguard">Code and full validation package on GitHub</a></p>
+  <details><summary>Log in with a username and password instead</summary>{% include "_login_form.html" %}</details>
+</div>
+{% else %}
+<div class="card" style="max-width:420px;margin:40px auto"><h2>Log in</h2>{% include "_login_form.html" %}</div>
+{% endif %}
 {% endblock %}

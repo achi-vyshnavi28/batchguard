@@ -1,0 +1,7 @@
+<form method="post" action="/login">
+<p><label>Username<br><input name="username" autocomplete="username" required></label></p>
+<p><label>Password<br><input name="password" type="password" autocomplete="current-password" required></label></p>
+<button type="submit">Log in</button></form>
+<p class="muted">{% if demo %}Demo users: op1 or op2 · {{ demo_passwords.op1 }}, sup1 · {{ demo_passwords.sup1 }}, qa1 · {{ demo_passwords.qa1 }}.
+{% else %}Demo users: op1 / op2 (operator), sup1 (supervisor), qa1 (QA). Passwords are in the README.{% endif %}
+Accounts lock after 3 failed attempts; sessions end after 15 minutes idle.</p>

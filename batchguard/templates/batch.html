@@ -1,4 +1,11 @@
 {% extends "base.html" %}{% block title %} · {{ batch.batch_no }}{% endblock %}{% block body %}
+{% if demo %}<details class="card guide" open><summary><b>What you're looking at</b> (click to hide)</summary><ul>
+<li><b>critical</b> steps must be verified by a second person; the person who recorded a value can't verify it.</li>
+<li>A value in <span class="oos">red</span> is out of specification: the system raised a <b>deviation</b> on its own, and it blocks release until QA closes it with an investigation.</li>
+<li><b>corrected</b> values never overwrite the original: open "earlier values" to see what was first recorded, by whom and when.</li>
+<li>Every signature shows the printed name, UTC time and meaning (verified, reviewed, approved for release), and needs the password again.</li>
+<li>The <b>ALCOA+ report</b> (link below the title) checks the batch's data integrity; the <b>Audit trail</b> shows every action.</li>
+</ul></details>{% endif %}
 <div class="card"><h2>{{ batch.batch_no }} <span class="pill {{ batch.status }}">{{ batch.status.replace("_", " ") }}</span></h2>
 <p class="muted">{{ batch.template.product }} · master record v{{ batch.template.version }} · <a href="/batches/{{ batch.id }}/alcoa">ALCOA+ report</a></p>
 <table><tr><th>#</th><th>Instruction</th><th>Spec</th><th>Value</th><th>Recorded</th><th>Signatures</th><th>Actions</th></tr>
